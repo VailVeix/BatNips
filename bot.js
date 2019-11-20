@@ -3,6 +3,7 @@
     var logger = require('winston');
     var auth = require('./auth.json');
     var cron = require("cron");
+    var var_dump = require('var_dump');
 
 // Fun Bot Array Initializations
     var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'black', 'white', 'grey', 'brown', 'tan'];
@@ -47,6 +48,17 @@
             var cmd = args[0];
             args = args.splice(1);
             switch(cmd) {            
+                case 'dmUser':
+                    taggedUser = message.match('<@(.*)>');
+                    taggedUser = taggedUser[1];
+                    if(taggedUser.substring(0,1) == "!"){
+                        taggedUser = taggedUser.substr(1);
+                    }
+                    bot.sendMessage({
+                        to: taggedUser,
+                        message: user + " wants you to know they love butts !"
+                    });
+                    break;
                 case 'batNips':
                 case 'batnips':
                 case 'BatNips':
