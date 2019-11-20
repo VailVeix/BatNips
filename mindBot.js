@@ -5,10 +5,9 @@ var games = [];
 
 createGame(1, 1);
 addPlayer(1, 2);
-addPlayer(1, 3);
-addPlayer(1, 4);
 startGame(1);
-checkNumber(1, 1, 25);
+checkNumber(1, 1, 1);
+checkNumber(1, 1, 2);
 
 function gameExists(channelID){
     if(gameChannels.includes(channelID)){

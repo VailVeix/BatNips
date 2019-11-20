@@ -86,7 +86,7 @@ module.exports = class Game{
 		}
 	}
 
-	startGame(){
+	async startGame(){
 		this.gameActive = 1;
 		this.level++;
 		if(this.level > this.maxLevel){
@@ -102,7 +102,7 @@ module.exports = class Game{
 			this.cardsSorted[i] = this.cards[i];
 		}
 
-		this.cardsSorted.sort();
+		await this.cardsSorted.sort();
 
 		return this.cards;
 	}
@@ -119,6 +119,7 @@ module.exports = class Game{
 	checkNumber(number, userId){
 		var response = [];
 		response['over'] = -1;
+		response['cardsBefore'] = this.cardsSorted;
 
 		if(this.cardsSorted[0] == number){
 			this.cardsSorted.shift();
@@ -134,13 +135,16 @@ module.exports = class Game{
 			thisplayer.removeLives();
 
 			var totalCards = 0;
+			var cardNumbers = "";
 
-			while(number >= this.cardsSorted[0]){
+			while(number >= this.cardsSorted[0] && totalCards != 0){
+				cardNumbers += this.cardsSorted[0] + " ";
 				this.cardsSorted.shift();
 				totalCards++;
 			}
 
 			response['totalCards'] = totalCards;
+			response['cardNumbers'] = cardNumbers;
 
 			if(this.cardsSorted.length == 0){
 				response['message'] = this.endGame();
@@ -150,6 +154,8 @@ module.exports = class Game{
 				response['over'] = 3;
 			}
 		}
+		
+		response['cards'] = this.cardsSorted;
 
 		return response;
 
