@@ -28,12 +28,143 @@
 
 // Variables
     var cronChannelTestId = 0; // this is a saved channel id for the good morning cron
+    const Game = require('./Classes/Game.js');
+
+    var gameChannels = [];
+    var games = [];
 
 // Helper Functions
     function goodMorning(){
         bot.sendMessage({
             to: cronChannelTestId,
             message: "Good Morning !"
+        });
+    }
+
+    function gameExists(channelID){
+        if(gameChannels.includes(channelID)){
+            return gameChannels.indexOf(channelID);
+        }
+        else{
+            return -1;
+        }
+    }
+
+    function createGame(channelID, userID, user){
+        gameId = gameExists(channelID);
+        if(gameId != -1){
+            console.log("Game Exists");
+            console.log(gameId);
+        }
+        else{
+            myGame = new Game(channelID, userID, user);
+            gameChannels.push(channelID);
+            games.push(myGame);
+        }
+    }
+
+    function addPlayer(channelID, userId, user){
+        gameId = gameExists(channelID);
+        game = games[gameId];
+        game.addPlayer(userId, user);
+    }
+
+    function startGame(channelID){
+        gameId = gameExists(channelID);
+        game = games[gameId];
+        var cards = game.startGame();   
+        var players = game.getPlayers();
+        var level = game.getLevel();
+
+        cardCount = 0;
+
+        for (var i = 0; i < players.length; i++) {
+            playerID = players[i];
+            cardMessage = "";
+
+            for(var j = 0; j < level; j++){
+                cardMessage += cards[cardCount] + ", ";
+                cardCount++;
+            }
+
+            cardMessage = cardMessage.substring(0, cardMessage.length - 2);
+
+            bot.sendMessage({
+                to: playerID,
+                message: cardMessage
+            });
+        }
+
+        bot.sendMessage({
+            to: channelID,
+            message: "Starting level " + game.getLevel() + " now ! You have all been sent your numbers for this round. If you think you have the lowest number, please enter it now."
+        });
+    }
+
+    function checkNumber(channelID, userId, number){
+        gameId = gameExists(channelID);
+        game = games[gameId];
+        var response = game.checkNumber(number, userId);
+
+        if(response['over'] == 1){
+            bot.sendMessage({
+                to: channelID,
+                message: "Congratulations ! You have played the last number. The level is over ! Start again to go to the next level. " + response['message']
+            });
+            //console.log("Congratulations ! You have played the last card. The level is over ! Start again to go to the next level.");
+        }
+        else if(response['over'] == 2){
+            bot.sendMessage({
+                to: channelID,
+                message: "Whomp whomp. " + number + " was the highest number. This level is over. Start again to go to the next level. " + response['message']
+            });
+            //console.log("Whomp whomp. " + number + " is the highest card. This level is over. Start again to go to the next level.");
+        }
+        else if(response['over'] == 3){
+            bot.sendMessage({
+                to: channelID,
+                message: "Whomp whomp. " + number + " is the highest number now. All lower number have been discarded for a total of " + response['totalCards'] + ". Who's next ?"
+            });
+            //console.log("Whomp whomp. " + number + " is the new highest card. Who's next ?");
+        }   
+        else{
+            bot.sendMessage({
+                to: channelID,
+                message: "Congratulations ! " + number + " was the next number. Who's next ?"  + response['over']
+            });
+            //console.log("Congratulations ! " + number + " was the next card. Who's next ?" + response['over']);
+        }
+    }
+
+    function closeGame(channelID){
+        gameId = gameExists(channelID);
+        game = games[gameId];
+        if(gameId != -1 && game.getActive() != 1){
+            gameChannels.slice(gameId, 1);
+            games.slice(gameId, 1);
+        }
+    }
+
+    function listPlayers(channelID){
+        gameId = gameExists(channelID);
+        game = games[gameId];
+        message = game.getPlayersStats();
+
+        message = "Player Stats: \n" + message;
+
+        bot.sendMessage({
+            to: channelID,
+            message: message
+        });
+    }
+
+    function currentLevel(channelID){
+        gameId = gameExists(channelID);
+        game = games[gameId];
+        level = game.getLevel();
+        bot.sendMessage({
+            to: channelID,
+            message: "The current level is " + level
         });
     }
 
@@ -47,7 +178,30 @@
             var args = message.substring(1).split(' ');
             var cmd = args[0];
             args = args.splice(1);
-            switch(cmd) {            
+            switch(cmd) {   
+                case 'lastLevel':
+                    currentLevel(channelID);
+                    break;
+                case 'mindGameListPlayers':
+                    listPlayers(channelID);
+                    break;
+                case 'startMindGame':
+                    startGame(channelID);
+                    break;
+                case 'createMindGame':
+                    createGame(channelID, userID, user);
+                    bot.sendMessage({
+                        to: channelID,
+                        message: "The Mind Game for this channel has been created ! Players please add yourself then start the game when you're ready."
+                    });
+                    break;
+                case 'mindGameAddMe':
+                    addPlayer(channelID, userID, user);
+                    bot.sendMessage({
+                        to: channelID,
+                        message: user + " has been added to the Mind Game."
+                    });
+                    break;
                 case 'dmUser':
                     taggedUser = message.match('<@(.*)>');
                     taggedUser = taggedUser[1];
@@ -58,6 +212,9 @@
                         to: taggedUser,
                         message: user + " wants you to know they love butts !"
                     });
+                    break;
+                case 'closeGame':
+                    closeGame();
                     break;
                 case 'batNips':
                 case 'batnips':
@@ -167,6 +324,10 @@
          else if(user == "BatNips"){
             //return;
             // Do not do anything in response to yourself Batnips.
+         }
+         else if(gameExists(channelID) != -1 && !isNaN(message)){
+
+            checkNumber(channelID, userID, message);
          }
          // Commands containing a phrase go under here. Make sure it's not from Batnips though.
          else if((message.toLowerCase().includes("let's bash") || message.toLowerCase().includes("lets bash")) && user != "BatNips"){
