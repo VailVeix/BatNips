@@ -69,14 +69,23 @@
         game.addPlayer(userId, user);
     }
 
-    async function startGame(channelID){
+    function startGame(channelID){
         gameId = gameExists(channelID);
+        if(gameId == -1){
+            return;
+        }        
         game = games[gameId];
-        var cards = await game.startGame(channelID);   
+        var cards = game.startGame(channelID);   
         var players = game.getPlayers();
         var level = game.getLevel();
+        var cardsSorted = game.getCardsSorted();
 
-        cardCount = 0;
+        bot.sendMessage({
+            to: channelID,
+            message: cardsSorted
+        });
+
+        var cardCount = 0;
 
         for (var i = 0; i < players.length; i++) {
             playerID = players[i];
@@ -101,44 +110,44 @@
         });
     }
 
-    async function checkNumber(channelID, userId, number){
+    function checkNumber(channelID, userId, number){
         gameId = gameExists(channelID);
         game = games[gameId];
         var response = game.checkNumber(number, userId);
 
-        await bot.sendMessage({
+        bot.sendMessage({
             to: channelID,
             message: "Debug Message. test" 
         });
 
-        await bot.sendMessage({
+        bot.sendMessage({
             to: channelID,
             message: "Debug Message. Over Response- " + response['over'] + ". Total Cards- " + response['totalCards'] + ". Total Cards Numbers- " + response['cardNumbers'] + ". Cards- " + response['cards'] + ". Before Cards- " + response['cardsBefore'] 
         });
 
         if(response['over'] == 1){
-            await bot.sendMessage({
+            bot.sendMessage({
                 to: channelID,
                 message: "Congratulations ! You have played the last number. The level is over ! Start again to go to the next level. " + response['message']
             });
             //console.log("Congratulations ! You have played the last card. The level is over ! Start again to go to the next level.");
         }
         else if(response['over'] == 2){
-            await bot.sendMessage({
+            bot.sendMessage({
                 to: channelID,
                 message: "Whomp whomp. " + number + " was the highest number. This level is over. Start again to go to the next level. " + response['message']
             });
             //console.log("Whomp whomp. " + number + " is the highest card. This level is over. Start again to go to the next level.");
         }
         else if(response['over'] == 3){
-            await bot.sendMessage({
+            bot.sendMessage({
                 to: channelID,
                 message: "Whomp whomp. " + number + " is the highest number now. All lower number have been discarded for a total of " + response['totalCards'] + ". Who's next ?"
             });
             //console.log("Whomp whomp. " + number + " is the new highest card. Who's next ?");
         }   
         else{
-            await bot.sendMessage({
+            bot.sendMessage({
                 to: channelID,
                 message: "Congratulations ! " + number + " was the next number. Who's next ?"
             });

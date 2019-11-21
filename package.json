@@ -7,9 +7,9 @@
   "dependencies": {
     "cron": "^1.7.2",
     "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
+    "node": "^13.1.0",
+    "var_dump": "^1.0.5",
     "winston": "^3.2.1"
   },
-  "devDependencies": {
-    "var_dump": "^1.0.5"
-  }
+  "devDependencies": {}
 }

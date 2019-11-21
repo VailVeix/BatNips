@@ -57,6 +57,10 @@ module.exports = class Game{
 		return this.cards;
 	}
 
+	getCardsSorted(){
+		return this.cardsSorted;
+	}
+
 	getActive(){
 		return this.gameActive;
 	}
@@ -86,7 +90,7 @@ module.exports = class Game{
 		}
 	}
 
-	async startGame(){
+	startGame(){
 		this.gameActive = 1;
 		this.level++;
 		if(this.level > this.maxLevel){
@@ -99,10 +103,10 @@ module.exports = class Game{
 
 		for(var i = 0; i < this.level * this.playerIds.length; i++){
 			this.cards[i] = this.random100();
-			this.cardsSorted[i] = this.cards[i];
+			this.cardsSorted[i] = parseInt(this.cards[i]);
 		}
 
-		await this.cardsSorted.sort();
+		this.cardsSorted = this.cardsSorted.sort(function(a, b){return a-b});
 
 		return this.cards;
 	}
@@ -121,7 +125,7 @@ module.exports = class Game{
 		response['over'] = -1;
 		response['cardsBefore'] = this.cardsSorted;
 
-		if(this.cardsSorted[0] == number){
+		if(parseInt(this.cardsSorted[0]) == parseInt(number)){
 			this.cardsSorted.shift();
 			response['over'] = 0;
 			if(this.cardsSorted.length == 0){
