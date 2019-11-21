@@ -71,15 +71,15 @@ module.exports = class Game{
 
 	addPlayer(userId, user){
 		var playerId = this.playerExists(userId);
-		/*if(playerId != -1){
+		if(playerId != -1){
 			console.log("already added");
 		}	
-		else{*/
+		else{
 			this.playerIds.push(userId);
 			var newPlayer = new Player(userId);
 			this.players.push(newPlayer);
 			this.playerNames.push(user);
-		//}
+		}
 	}
 
 	removePlayer(userId){
@@ -133,6 +133,9 @@ module.exports = class Game{
 				response['over'] = 1;
 			}
 		}
+		else if(parseInt(this.cardsSorted[0]) > parseInt(number)){
+			response['over'] = -1;
+		}
 		else{
 			var playerId = this.playerExists(userId);
 			var thisplayer = this.players[playerId];
@@ -141,7 +144,7 @@ module.exports = class Game{
 			var totalCards = 0;
 			var cardNumbers = "";
 
-			while(number >= this.cardsSorted[0] && totalCards != 0){
+			while(number >= this.cardsSorted[0]){
 				cardNumbers += this.cardsSorted[0] + " ";
 				this.cardsSorted.shift();
 				totalCards++;

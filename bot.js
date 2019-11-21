@@ -54,7 +54,6 @@
         gameId = gameExists(channelID);
         if(gameId != -1){
             console.log("Game Exists");
-            console.log(gameId);
         }
         else{
             myGame = new Game(channelID, userID, user);
@@ -79,11 +78,6 @@
         var players = game.getPlayers();
         var level = game.getLevel();
         var cardsSorted = game.getCardsSorted();
-
-        bot.sendMessage({
-            to: channelID,
-            message: cardsSorted
-        });
 
         var cardCount = 0;
 
@@ -115,15 +109,10 @@
         game = games[gameId];
         var response = game.checkNumber(number, userId);
 
-        bot.sendMessage({
-            to: channelID,
-            message: "Debug Message. test" 
-        });
-
-        bot.sendMessage({
+        /*bot.sendMessage({
             to: channelID,
             message: "Debug Message. Over Response- " + response['over'] + ". Total Cards- " + response['totalCards'] + ". Total Cards Numbers- " + response['cardNumbers'] + ". Cards- " + response['cards'] + ". Before Cards- " + response['cardsBefore'] 
-        });
+        });*/
 
         if(response['over'] == 1){
             bot.sendMessage({
@@ -143,6 +132,13 @@
             bot.sendMessage({
                 to: channelID,
                 message: "Whomp whomp. " + number + " is the highest number now. All lower number have been discarded for a total of " + response['totalCards'] + ". Who's next ?"
+            });
+            //console.log("Whomp whomp. " + number + " is the new highest card. Who's next ?");
+        } 
+        else if(response['over'] == -1){
+            bot.sendMessage({
+                to: channelID,
+                message: "You cannot play numbers lower than the previous one. All lower numbers have been discared. Please play the next number."
             });
             //console.log("Whomp whomp. " + number + " is the new highest card. Who's next ?");
         }   
