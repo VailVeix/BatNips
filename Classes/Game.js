@@ -1,11 +1,9 @@
-const Player = require('./Player.js');
-const Card = require('./Card.js');
-
 module.exports = class Game{
-	constructor(channelId, userId, user){
+	constructor(channelId, user){
 		this.channelId = channelId;
 		
 		this.totalGamesComplete = 0;
+		this.totalGamesTried = 0;
 		this.gameActive = 0;
 		this.level = 0;
 		this.cards = [];
@@ -13,14 +11,10 @@ module.exports = class Game{
 		this.maxLevel = 0;
 
 		this.playerIds = [];
-		this.playerIds.push(userId);
+		this.playerIds.push(user.id);
 
 		this.players = [];
-		var newPlayer = new Player(userId);
-		this.players.push(newPlayer);
-
-		this.playerNames = []
-		this.playerNames.push(user);
+		this.players.push(user);
 	}
 
 	playerExists(userID){
@@ -33,17 +27,13 @@ module.exports = class Game{
 	}
 
 	getPlayers(){
-		return this.playerIds;
-	}
-
-	getPlayerName(){
-		return this.playerIds;
+		return this.players;
 	}
 
 	getPlayersStats(){
 		var message = "";
 		for(var i = 0; i < this.players.length; i++){
-            message += this.playerNames[i] + "- " + this.players[i].getLives() + ".\n";
+            message += this.players[i].username + ".\n";
         }
 
         return message;
@@ -65,26 +55,20 @@ module.exports = class Game{
 		return this.gameActive;
 	}
 
-	getLevel(){
-		return this.level;
-	}
-
-	addPlayer(userId, user){
-		var playerId = this.playerExists(userId);
+	addPlayer(user){
+		var playerId = this.playerExists(user.id);
 		if(playerId != -1){
 			console.log("already added");
 		}	
 		else{
-			this.playerIds.push(userId);
-			var newPlayer = new Player(userId);
-			this.players.push(newPlayer);
-			this.playerNames.push(user);
+			this.playerIds.push(user.id);
+			this.players.push(user); 
 		}
 	}
 
-	removePlayer(userId){
+	removePlayer(user){
 		if(this.gameActive != 1){
-			var playerId = this.playerExists(userId);
+			var playerId = this.playerExists(user.id);
 			this.playerIds.slice(playerId, 1);
 			this.players.slice(playerId, 1);
 		}
@@ -97,10 +81,6 @@ module.exports = class Game{
 			this.maxLevel = this.level;
 		}
 
-		if(this.level == 1){
-			this.resetLives();
-		}
-
 		for(var i = 0; i < this.level * this.playerIds.length; i++){
 			this.cards[i] = this.random100();
 			this.cardsSorted[i] = parseInt(this.cards[i]);
@@ -111,16 +91,7 @@ module.exports = class Game{
 		return this.cards;
 	}
 
-	resetLives(){
-		var totalLives = this.playerIds.length;
-
-		for(var i = 0; i < this.playerIds.length; i++){
-			var thisplayer = this.players[i];
-			thisplayer.setLives(totalLives);
-		}
-	}
-
-	checkNumber(number, userId){
+	checkNumber(number){
 		var response = [];
 		response['over'] = -1;
 		response['cardsBefore'] = this.cardsSorted;
@@ -137,10 +108,6 @@ module.exports = class Game{
 			response['over'] = -1;
 		}
 		else{
-			var playerId = this.playerExists(userId);
-			var thisplayer = this.players[playerId];
-			thisplayer.removeLives();
-
 			var totalCards = 0;
 			var cardNumbers = "";
 
@@ -173,21 +140,6 @@ module.exports = class Game{
 		this.gameActive = 0;
 		this.cards = [];
 		this.cardsSorted = [];
-		var removedUsers = "";
-
-		for(var i = 0; i < this.playerIds.length; i++){
-			var thisplayer = this.players[i];
-			if(thisplayer.getOut() == 1){
-				this.removePlayer(thisplayer.userId);
-				removedUsers += this.playerNames[i] + ", ";	
-			}
-		}
-
-		removedUsers = removedUsers.substring(0, removedUsers.length - 2);
-		if(removedUsers.length != 0){
-			removedUsers += ". These people have run out of lives during this round and will not be in the next round";
-		}
-		return removedUsers
 	}
 
 	random100(){
