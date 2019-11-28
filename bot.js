@@ -80,10 +80,7 @@
             });
         }
 
-        bot.sendMessage({
-            to: channelID,
-            message: "Starting level " + game.getLevel() + " now ! You have all been sent your numbers for this round. If you think you have the lowest number, please enter it now."
-        });
+        channelID.send("Starting level " + game.getLevel() + " now ! You have all been sent your numbers for this round. If you think you have the lowest number, please enter it now.");
     }
 
     function checkNumber(channelID, userId, number){
@@ -97,39 +94,19 @@
         });*/
 
         if(response['over'] == 1){
-            bot.sendMessage({
-                to: channelID,
-                message: "Congratulations ! You have played the last number. The level is over ! Start again to go to the next level. " + response['message']
-            });
-            //console.log("Congratulations ! You have played the last card. The level is over ! Start again to go to the next level.");
+            channelID.send("Congratulations ! You have played the last number. The level is over ! Start again to go to the next level. " + response['message']);
         }
         else if(response['over'] == 2){
-            bot.sendMessage({
-                to: channelID,
-                message: "Whomp whomp. " + number + " was the highest number. This level is over. Start again to go to the next level. " + response['message']
-            });
-            //console.log("Whomp whomp. " + number + " is the highest card. This level is over. Start again to go to the next level.");
+            channelID.send("Whomp whomp. " + number + " was the highest number. This level is over. Start again to go to the next level. " + response['message']);
         }
         else if(response['over'] == 3){
-            bot.sendMessage({
-                to: channelID,
-                message: "Whomp whomp. " + number + " is the highest number now. All lower number have been discarded for a total of " + response['totalCards'] + ". Who's next ?"
-            });
-            //console.log("Whomp whomp. " + number + " is the new highest card. Who's next ?");
+            channelID.send("Whomp whomp. " + number + " is the highest number now. All lower number have been discarded for a total of " + response['totalCards'] + ". Who's next ?");
         } 
         else if(response['over'] == -1){
-            bot.sendMessage({
-                to: channelID,
-                message: "You cannot play numbers lower than the previous one. All lower numbers have been discared. Please play the next number."
-            });
-            //console.log("Whomp whomp. " + number + " is the new highest card. Who's next ?");
+            channelID.send("You cannot play numbers lower than the previous one. All lower numbers have been discared. Please play the next number.");
         }   
         else{
-            bot.sendMessage({
-                to: channelID,
-                message: "Congratulations ! " + number + " was the next number. Who's next ?"
-            });
-            //console.log("Congratulations ! " + number + " was the next card. Who's next ?" + response['over']);
+            channelID.send("Congratulations ! " + number + " was the next number. Who's next ?");
         }
     }
 
@@ -149,20 +126,14 @@
 
         message = "Player Stats: \n" + message;
 
-        bot.sendMessage({
-            to: channelID,
-            message: message
-        });
+        channelID.send(message);
     }
 
     function currentLevel(channelID){
         gameId = gameExists(channelID);
         game = games[gameId];
         level = game.getLevel();
-        bot.sendMessage({
-            to: channelID,
-            message: "The current level is " + level
-        });
+        channelID.send("The current level is " + level);
     }
 
 // Cron Job Setups
@@ -172,6 +143,7 @@
     client.on('message', message => {
         messageContent = message.content;
         channelID = message.channel;
+        userInfo = message.author;
         user = message.author.tag;
         userID = message.author.id;
         
@@ -185,7 +157,7 @@
             var cmd = args[0];
             args = args.splice(1);
             switch(cmd) {   
-                /*case 'lastLevel':
+                case 'lastLevel':
                     currentLevel(channelID);
                     break;
                 case 'mindGameListPlayers':
@@ -196,17 +168,14 @@
                     break;
                 case 'createMindGame':
                     createGame(channelID, userID, user);
-                    bot.sendMessage({
-                        to: channelID,
-                        message: "The Mind Game for this channel has been created ! Players please add yourself then start the game when you're ready."
-                    });
+                    channelID.send("The Mind Game for this channel has been created ! Players please add yourself then start the game when you're ready.");
                     break;
                 case 'mindGameAddMe':
                     addPlayer(channelID, userID, user);
-                    bot.sendMessage({
-                        to: channelID,
-                        message: user + " has been added to the Mind Game."
-                    });
+                    channelID.send(user + " has been added to the Mind Game.");
+                    break;
+                case 'closeGame':
+                    closeGame();
                     break;
                 case 'dmUser':
                     taggedUser = messageContent.match('<@(.*)>');
@@ -214,14 +183,8 @@
                     if(taggedUser.substring(0,1) == "!"){
                         taggedUser = taggedUser.substr(1);
                     }
-                    bot.sendMessage({
-                        to: taggedUser,
-                        message: user + " wants you to know they love butts !"
-                    });
+                    userInfo.send(user + " wants you to know they love butts !");
                     break;
-                case 'closeGame':
-                    closeGame();
-                    break;*/
                 case 'batNips':
                 case 'batnips':
                 case 'BatNips':
