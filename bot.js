@@ -92,14 +92,11 @@
         var response = game.checkNumber(number, user);
 
         if(response['over'] == 1){
-            channelID.send("Congratulations ! You have played the last number. The level is over ! Start again to go to the next level. " + response['message']);
+            channelID.send("Congratulations ! You have played the last number. The level is over ! Start again to go to the next level. ");
         }
         else if(response['over'] == 2){
-            channelID.send("Whomp whomp. " + number + " was the highest number. This level is over. Start again to go to the next level. " + response['message']);
+            channelID.send("Whomp whomp. This game is over. Feel free to add or remove players and start again. ");
         }
-        else if(response['over'] == 3){
-            channelID.send("Whomp whomp. " + number + " is the highest number now. All lower number have been discarded for a total of " + response['totalCards'] + ". Who's next ?");
-        } 
         else if(response['over'] == -1){
             channelID.send("You cannot play numbers lower than the previous one. All lower numbers have been discared. Please play the next number.");
         }   
@@ -151,16 +148,16 @@
         user = message.author.tag;
         userID = message.author.id;
         
-        /*console.log(message);
-        console.log(user);
-        console.log(userID);*/
-        
         // Commands that start with ~ go here
         if (messageContent.substring(0, 1) == '~') {
             var args = messageContent.substring(1).split(' ');
             var cmd = args[0];
             args = args.splice(1);
             switch(cmd) { 
+                case 'mindGameRules':
+                case 'mindgamerules':
+                    channelID.send("Start by creating the game. All players then add themselves. Once the game starts, each person is PM'd a set of numbers. This set of numbers grow as you complete levels. The goal is to play the numbers in order from lowest to highest without revealing the numbers you have.");
+                    break;
                 case 'createMindGame':
                 case 'createmindgame':
                     createGame(channelID, userInfo);
@@ -169,6 +166,7 @@
                 case 'mindGameAddMe':
                 case 'mindgameaddme':
                 case 'addmemindgame':
+                case 'AddMeMindGame':
                     addPlayer(channelID, userInfo);
                     channelID.send(user + " has been added to the Mind Game.");
                     break;
@@ -184,14 +182,6 @@
                 case 'mindGameListPlayers':
                     listPlayers(channelID);
                     break;
-                /*case 'dmUser':
-                    taggedUser = messageContent.match('<@(.*)>');
-                    taggedUser = taggedUser[1];
-                    if(taggedUser.substring(0,1) == "!"){
-                        taggedUser = taggedUser.substr(1);
-                    }
-                    userInfo.send(user + " wants you to know they love butts !");
-                    break;*/
                 case 'batNips':
                 case 'batnips':
                 case 'BatNips':

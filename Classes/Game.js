@@ -100,33 +100,16 @@ module.exports = class Game{
 			this.cardsSorted.shift();
 			response['over'] = 0;
 			if(this.cardsSorted.length == 0){
-				response['message'] = this.endGame();
+				this.endGame();
 				response['over'] = 1;
 			}
 		}
 		else if(parseInt(this.cardsSorted[0]) > parseInt(number)){
 			response['over'] = -1;
 		}
-		else{
-			var totalCards = 0;
-			var cardNumbers = "";
-
-			while(number >= this.cardsSorted[0]){
-				cardNumbers += this.cardsSorted[0] + " ";
-				this.cardsSorted.shift();
-				totalCards++;
-			}
-
-			response['totalCards'] = totalCards;
-			response['cardNumbers'] = cardNumbers;
-
-			if(this.cardsSorted.length == 0){
-				response['message'] = this.endGame();
-				response['over'] = 2;
-			}
-			else{
-				response['over'] = 3;
-			}
+		else{			
+			this.endGame();
+			response['over'] = 2;
 		}
 		
 		response['cards'] = this.cardsSorted;
