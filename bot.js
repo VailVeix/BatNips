@@ -137,6 +137,25 @@
         channelID.send("The current level is " + level);
     }
 
+    function maxLevel(channelID){
+        gameId = gameExists(channelID);
+        if(gameId == -1){
+            return;
+        }
+        game = games[gameId];
+        level = game.getMaxLevel();
+        channelID.send("The max level reached so far is " + level);
+    }
+
+    function totalGamesPlayed(channelID){
+        gameId = gameExists(channelID);
+        if(gameId == -1){
+            return;
+        }
+        game = games[gameId];
+        totalGames = game.getTotalGames();
+        channelID.send("Total Games Played- " + totalGames);
+    }
 // Cron Job Setups
     var goodMorningJob = new cron.CronJob('0 30 10 * * *', goodMorning);
 
@@ -181,6 +200,12 @@
                     break;
                 case 'mindGameListPlayers':
                     listPlayers(channelID);
+                    break;
+                case 'getMaxLevel':
+                    maxLevel(channelID);
+                    break;
+                case 'getTotalGames':
+                    totalGamesPlayed(channelID);
                     break;
                 case 'batNips':
                 case 'batnips':

@@ -3,7 +3,6 @@ module.exports = class Game{
 		this.channelId = channelId;
 		
 		this.totalGamesComplete = 0;
-		this.totalGamesTried = 0;
 		this.gameActive = 0;
 		this.level = 0;
 		this.cards = [];
@@ -53,6 +52,14 @@ module.exports = class Game{
 
 	getActive(){
 		return this.gameActive;
+	}
+
+	getTotalGames(){
+		return this.totalGamesComplete
+	}
+
+	getMaxLevel(){
+		return this.maxLevel;
 	}
 
 	addPlayer(user){
@@ -109,6 +116,7 @@ module.exports = class Game{
 		}
 		else{			
 			this.endGame();
+			this.level = 0;
 			response['over'] = 2;
 		}
 		
@@ -123,6 +131,9 @@ module.exports = class Game{
 		this.gameActive = 0;
 		this.cards = [];
 		this.cardsSorted = [];
+		if(this.level > this.maxLevel){
+			this.maxLevel = this.level;
+		}
 	}
 
 	random100(){
