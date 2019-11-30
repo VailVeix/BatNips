@@ -59,6 +59,9 @@
             return;
         }        
         game = games[gameId];
+        if(game.getActive() == 1){
+            return;
+        }
         var cards = game.startGame(channelID);   
         var players = game.getPlayers();
         var level = game.getLevel();
