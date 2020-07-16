@@ -348,7 +348,7 @@
         }
         else if(messageContent.toLowerCase().includes("butts")){
             try{
-                message.react('\:blue_heart:');
+                message.react('💙');
             }
             catch(error){
                 console.error("Fail to react");
