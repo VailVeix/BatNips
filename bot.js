@@ -347,6 +347,7 @@
             channelID.send("Life is change.");
         }
         else if(messageContent.toLowerCase().includes("butts")){
+            message.react('\:blue_heart: ');
             channelID.send("We all love butts.");
         }
         // Weird issue with @'ing lady penguin. Her username converts to an ID with 99 and prints this. TODO: Figure out a way to deal with this earlier
