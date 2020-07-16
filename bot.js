@@ -218,12 +218,27 @@
                     break;
                 case 'butts':
                     channelID.send('We all love butts.');
+                case 'meanRetort':
+                    channelID.send('Yeah well... You suck.');
                     break;
                 case 'grillMeACheese':
                     channelID.send('https://www.youtube.com/watch?v=U6V8OmFz1jM');
                     break;
                 case 'gucci':
                     channelID.send('https://media.discordapp.net/attachments/608017200711729162/627615678018486322/unknown.png');
+                    break;
+                case 'isaac':
+                    channelID.send('https://cdn.discordapp.com/attachments/626851264772309033/669576233943695394/82793937_1285203091671333_136975715479322624_n.png');
+                    break;
+                case 'shai':
+                    channelID.send('https://cdn.discordapp.com/attachments/656696837717098498/662686536701182002/586c5fa0a3636cfb0dbb7fec2128c3b7.png');
+                    break;
+                case 'calDick':
+                    channelID.send('https://scontent-lga3-1.xx.fbcdn.net/v/t1.0-9/89664971_10157374411642569_8677514086176522240_n.jpg?_nc_cat=110&_nc_sid=d4cf07&_nc_ohc=1bzQToPpiN4AX8sACz-&_nc_ht=scontent-lga3-1.xx&oh=ffa76ab726b660b81b69ac87a3de3771&oe=5EA72330');
+                    break;
+                case 'matt':
+                case 'maatt':
+                    channelID.send('https://cdn.discordapp.com/attachments/613430364987195417/661360465430970368/20191228_180203.jpg');
                     break;
                 case 'angrypants':
                     channelID.send('https://media.discordapp.net/attachments/608723228721938435/627997236755955752/14102446_10208533864123065_8943067988458447371_n.png?width=527&height=702');
@@ -234,11 +249,17 @@
                 case 'color':
                     channelID.send(colors[Math.floor(Math.random() * 13)]);
                     break;
+                case 'playGucci':
+                    channelID.send("-play Gucci Please");
+                    break;
                 case 'ready':
                     channelID.send('Bonesaw is READY ! https://www.youtube.com/watch?v=691qO96VRVw');
                     break;
                 case 'gameboy':
                     channelID.send('https://cdn.discordapp.com/attachments/624368677986238504/628357374192779264/70312300_2932057710155045_4612042788475764736_n.png');
+                    break;
+                case 'nice':
+                    channelID.send('https://media.discordapp.net/attachments/627493219395174420/671745587594657821/d96.png');
                     break;
                 case 'cronChannelGoodMorning':
                     cronChannelTestId = channelID
@@ -246,6 +267,9 @@
                     break;
                 case 'uggo':
                     channelID.send('YOU UGGO !!\nUGGOOOOOOOO !!!!!');
+                    break;
+                case 'corona':
+                    channelID.send('CORONA VAHRUS');
                     break;
                 case 'birthday':
                     messageContent = messageContent.substring(10);
@@ -276,6 +300,13 @@
                     }).on("error", (err) => {
                         //logger.info("Error: " + err.message);
                     });
+                    break;
+                case 'countdown':
+                    channelID.send('GET READY TO START WHEN I SAY START');
+                    channelID.send('3');
+                    channelID.send('2');
+                    channelID.send('1');
+                    channelID.send('START');
                     break;
             }
         }
@@ -309,6 +340,9 @@
                 channelID.send("Good Morning !");
             }
         }
+        else if(messageContent.toLowerCase().includes("corona") || messageContent.toLowerCase().includes("corona virus") || messageContent.toLowerCase().includes("covid") || messageContent.toLowerCase().includes("covid 19")){
+            channelID.send('CORONA VAHRUS');
+        }
         else if(messageContent.toLowerCase().includes("life is")){
             channelID.send("Life is change.");
         }
@@ -321,6 +355,9 @@
         }
         else if(messageContent.toLowerCase().includes("who run the world")){
             channelID.send("PANTSU !");
+        }
+        else if(messageContent.toLowerCase().includes("nazi")){
+            channelID.send("NAZIS ARE TRASH !\n https://cdn.discordapp.com/attachments/627351330356461598/681599496408399892/keep-your-country-nice-and-clean-d0012749008.png");
         }
         else if((messageContent.toLowerCase().includes("thanks nips") || messageContent.toLowerCase().includes("thanks batnips") || messageContent.toLowerCase().includes("thank you nips") || messageContent.toLowerCase().includes("thank you batnips"))){
             channelID.send("No problem !");
